@@ -120,11 +120,11 @@ foo->dig_H6 = bme280_read(foo, 0xE7);
 	// Read the measured and uncompensated data in burst as recommended
 void bme280_read_measured(bme280_config_t *foo)
 {
-    foo->adc_P = (bme280_read(foo, PRES_DATA1_REG) << 16);
-	foo->adc_P += (bme280_read(foo, PRES_DATA2_REG) << 8);
+    foo->adc_P = (bme280_read(foo, PRES_DATA1_REG) << 12);
+	foo->adc_P += (bme280_read(foo, PRES_DATA2_REG) << 4);
 	foo->adc_P += (bme280_read(foo, PRES_DATA3_REG) >> 4) & 0x0F;
-    foo->adc_T = (bme280_read(foo, TEMP_DATA1_REG) << 16);
-    foo->adc_T += (bme280_read(foo, TEMP_DATA2_REG) << 8);
+    foo->adc_T = (bme280_read(foo, TEMP_DATA1_REG) << 12);
+    foo->adc_T += (bme280_read(foo, TEMP_DATA2_REG) << 4);
     foo->adc_T += (bme280_read(foo, TEMP_DATA3_REG) >> 4) & 0x0F;
     foo->adc_H = (bme280_read(foo, HUM_DATA1_REG) << 8);
     foo->adc_H += bme280_read(foo, HUM_DATA2_REG);
@@ -141,7 +141,7 @@ float bme280_calc_temp(bme280_config_t *foo)
     foo->t_fine = var1 + var2;
     T = (foo->t_fine * 5 + 128) >> 8;
 
-    return (float) T / 1000.0;
+    return (float) T / 100.0;
 }
 
 
@@ -150,7 +150,7 @@ float bme280_calc_pressure(bme280_config_t *foo)
 {
     int64_t var1, var2, p;
 
-    var1 = ((int64_t) foo->t_fine) -128000;
+    var1 = ((int64_t) foo->t_fine) - 128000;
     var2 = var1 * var1 * (int64_t) foo->dig_P6;
     var2 = var2 + ((var1 * (int64_t) foo->dig_P5) << 17);
     var2 = var2 + (((int64_t) foo->dig_P4) << 35);
@@ -164,7 +164,7 @@ float bme280_calc_pressure(bme280_config_t *foo)
     var2 = (((int64_t) foo->dig_P8) * p) >> 19;
     p = (uint32_t) (((p + var1 + var2) >> 8) + (((int64_t) foo->dig_P7) << 4));
 
-    return ((float) p / 256.0) / 100.0 - 400;
+    return ((float) p / 256.0) / 100.0;
 }
 
 
