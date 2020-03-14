@@ -1,0 +1,2 @@
+# diplomska
+Diplomska verzija1
