@@ -16,6 +16,9 @@ void app_main()
             .scl_pin = GPIO_NUM_18,
             .i2c_interface = I2C_NUM_1
     };
+	
+    bme280_measurement_t my_measurement;
+	
    if(bme280_init(&my_bme280) == 0)
 	   printf("Error, no connection to sensor");
 
