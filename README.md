@@ -1,4 +1,6 @@
 # Undergraduate thesis
+(work in progress)
+
 Undergraduate thesis embedded project with ESP32 development board and sensors at FEEIT - Skopje. 
 
 The project includes working with:
