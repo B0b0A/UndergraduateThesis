@@ -75,7 +75,7 @@ typedef struct {
 } bme280_config_t;
 
 typedef struct {
-	float temperature;
+    float temperature;
     float pressure;
     float humidity;
 } bme280_measurement_t ;
