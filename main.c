@@ -19,12 +19,11 @@ void app_main()
 	
     bme280_measurement_t my_measurement;
 	
-   if(bme280_init(&my_bme280) == 0)
+    if(bme280_init(&my_bme280) == 0)
 	   printf("Error, no connection to sensor");
 
     for (;;)
     {
-        bme280_measurement_t my_measurement;
         my_measurement = bme280_make_measurement(&my_bme280);
         bme280_print_measurement(&my_measurement);
 
