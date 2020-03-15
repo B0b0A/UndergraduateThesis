@@ -1,12 +1,8 @@
-/*
- * main.c
- *
- *  Created on: Mar 13, 2020
- *      Author: Bojan Aleksovski
- */
-
 #include <stdio.h>
+#include <stdint.h>
+#include <math.h>
 #include "bme280.h"
+
 
 void delay_sec(int time)
 {
@@ -29,6 +25,6 @@ void app_main()
         my_measurement = bme280_make_measurement(&my_bme280);
         bme280_print_measurement(&my_measurement);
 
-        delay_sec(10);
+        delay_sec(5);
     }
 }
