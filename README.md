@@ -1,2 +1,1 @@
-# diplomska
-Diplomska verzija1
+# Diplomska rabota
