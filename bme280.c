@@ -192,7 +192,8 @@ bme280_measurement_t bme280_make_measurement(bme280_config_t *foo)
 	bme280_measurement_t my_measurement;
     bme280_set_oversampling(foo); // Set oversampling and more important - forced mode here
     //  in order to be able to make more measurements by calling the bme280_make_measurement function
-    while ((bme280_read(foo, STATUS_REG) >> 3) & 0x1);
+    while ((bme280_read(foo, STATUS_REG) >> 3) & 0x1)
+    vTaskDelay(100 / portTICK_PERIOD_MS);
     bme280_read_measured(foo);
     my_measurement.temperature = bme280_calc_temp(foo);
     my_measurement.pressure = bme280_calc_pressure(foo);
