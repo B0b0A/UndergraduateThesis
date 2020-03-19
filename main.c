@@ -11,10 +11,10 @@
 #include "bluetooth.h"
 #include "wifi.h"
 
+    // Initialize NVS (Non-violatile storage) for the Wi-Fi
 void init_NVS(){
     esp_err_t ret;
 
-    // Initialize NVS
     ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
