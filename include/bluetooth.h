@@ -32,7 +32,7 @@ extern "C" {
 #define BLUETOOTH_TAG "BLUETOOTH"
 #define BLUFI_INFO(fmt, ...)   ESP_LOGI(BLUETOOTH_TAG, fmt, ##__VA_ARGS__)
 #define BLUFI_ERROR(fmt, ...)  ESP_LOGE(BLUETOOTH_TAG, fmt, ##__VA_ARGS__)
-#define BLUFI_DEVICE_NAME            "BLUFI_DEVICE"
+#define BLUFI_DEVICE_NAME            "ESPWStation"
 
 void init_blufi();
 void deinit_blufi();
