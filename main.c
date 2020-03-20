@@ -10,7 +10,15 @@
 #include "bme280.h"
 #include "bluetooth.h"
 #include "wifi.h"
+#include "timers.h"
+#include "main.h"
 
+	// Config for BME280 sensor
+    bme280_config_t my_bme280 = {
+            .sda_pin = GPIO_NUM_19,
+            .scl_pin = GPIO_NUM_18,
+            .i2c_interface = I2C_NUM_1
+    };
     // Initialize NVS (Non-violatile storage) for the Wi-Fi
 void init_NVS(){
     esp_err_t ret;
@@ -28,25 +36,19 @@ void delay_sec(int time)
     vTaskDelay(time * 1000 / portTICK_PERIOD_MS);
 }
 
-// does single measurement as of now
-
 void app_main()
 {
+	bme280_measurement_t my_measurement;
+	timer_idx_t timer_idx = TIMER_0;
 	init_NVS();
 	init_WiFi();
 	init_blufi();
-    bme280_config_t my_bme280 = {
-            .sda_pin = GPIO_NUM_19,
-            .scl_pin = GPIO_NUM_18,
-            .i2c_interface = I2C_NUM_1
-    };
-   if(bme280_init(&my_bme280) == 0)
-	   printf("Error, no connection to sensor");
-   else{
-
-        bme280_measurement_t my_measurement;
-        my_measurement = bme280_make_measurement(&my_bme280);
-        bme280_print_measurement(&my_measurement);
-
-   }
+	tg0_timer_init(timer_idx, WITH_RELOAD, TIMER_INTERVAL1_SEC);
+	bme280_init(&my_bme280);
+    while(1)
+    {
+        xQueueReceive(timer_queue, &my_measurement, portMAX_DELAY);
+    if(my_measurement.temperature != 555)
+    	bme280_print_measurement(&my_measurement);
+	}
 }
