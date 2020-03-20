@@ -2,7 +2,7 @@
  * timers.h
  *
  *  Created on: Mar 20, 2020
- *      Author: Eli
+ *      Author: Bojan ALeksovski
  */
 
 #ifndef MAIN_INCLUDE_TIMERS_H_
