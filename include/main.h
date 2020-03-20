@@ -2,7 +2,7 @@
  * main.h
  *
  *  Created on: Mar 20, 2020
- *      Author: Eli
+ *      Author: Bojan Aleksovski
  */
 
 #ifndef MAIN_INCLUDE_MAIN_H_
