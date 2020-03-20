@@ -23,14 +23,8 @@ static void IRAM_ATTR timer_group0_isr(void *para)
     timer_idx_t timer_idx = (int) para;
 
 	bme280_measurement_t my_measurement;
-
-    if(bme280_init(&my_bme280) == 0)
-    	printf("Error, no connection to sensor");
-    else
-    {
         my_measurement = bme280_make_measurement(&my_bme280);
 	xQueueSendFromISR(timer_queue, &my_measurement, NULL);
-    }
 
     // Clear the interrupt
     timer_group_clr_intr_status_in_isr(TIMER_GROUP_0, timer_idx);
