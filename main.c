@@ -48,7 +48,5 @@ void app_main()
     while(1)
     {
         xQueueReceive(timer_queue, &my_measurement, portMAX_DELAY);
-    if(my_measurement.temperature != 555)
     	bme280_print_measurement(&my_measurement);
-	}
 }
