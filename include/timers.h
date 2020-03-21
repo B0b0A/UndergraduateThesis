@@ -23,12 +23,14 @@ extern "C" {
 
 #define TIMER_DIVIDER         16  //  Hardware timer clock divider
 #define TIMER_SCALE           (TIMER_BASE_CLK / TIMER_DIVIDER)  // convert counter value to seconds
-#define TIMER_INTERVAL1_SEC   (5.78)   // sample test interval for the second timer
-#define WITH_RELOAD      1        // With auto reload
-
+#define TIMER_INTERVAL0_SEC   (60) // sample test interval for the first timer
+#define TEST_WITHOUT_RELOAD   0        // testing will be done without auto reload
+#define TEST_WITH_RELOAD      1        // testing will be done with auto reload
 
 extern xQueueHandle timer_queue;
-void tg0_timer_init(timer_idx_t timer_idx, bool auto_reload, double timer_interval_sec);
+
+void initTimerGroup0(timer_idx_t timer_idx, bool auto_reload, double timer_interval_sec);
+void deinitTimer(timer_group_t timer_group, timer_idx_t timer_idx);
 
 #ifdef __cplusplus
 }
