@@ -23,7 +23,6 @@
 #include "esp_bt_device.h"
 #include "bluetooth.h"
 #include "wifi.h"
-#include "nvs_flash.h"
 
 static void event_callback(esp_blufi_cb_event_t event, esp_blufi_cb_param_t *param);
 
