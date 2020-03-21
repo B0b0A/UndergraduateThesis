@@ -12,44 +12,55 @@
 #include "freertos/queue.h"
 #include "driver/periph_ctrl.h"
 #include "driver/timer.h"
-#include "main.h"
 #include "timers.h"
 
 xQueueHandle timer_queue;
 
-static void IRAM_ATTR timer_group0_isr(void *para)
+void IRAM_ATTR timer_group0_isr(void *para)
 {
-    timer_spinlock_take(TIMER_GROUP_0);
-    timer_idx_t timer_idx = (int) para;
+    int timer_idx = (int) para;
+    bool evt;
 
-	bme280_measurement_t my_measurement;
-        my_measurement = bme280_make_measurement(&my_bme280);
-	xQueueSendFromISR(timer_queue, &my_measurement, NULL);
+    /* Prepare basic event data
+       that will be then sent back to the main program task */
+    evt = 1;
+    /* Clear the interrupt
+       and update the alarm time for the timer with without reload */
 
-    // Clear the interrupt
-    timer_group_clr_intr_status_in_isr(TIMER_GROUP_0, timer_idx);
-    // After the alarm has been triggered, we enable it again so it gets triggered again
-    timer_group_enable_alarm_in_isr(TIMER_GROUP_0, timer_idx);
+    TIMERG0.int_clr_timers.t0 = 1;
 
-    // Send event data back to the main program task
-    timer_spinlock_give(TIMER_GROUP_0);
+    /* After the alarm has been triggered
+      we need enable it again, so it is triggered the next time */
+    TIMERG0.hw_timer[timer_idx].config.alarm_en = TIMER_ALARM_EN;
+
+    /* Now just send the event data back to the main program task */
+    xQueueSendFromISR(timer_queue, &evt, NULL);
 }
 
-void tg0_timer_init(timer_idx_t timer_idx, bool auto_reload, double timer_interval_sec)
-{
-	timer_config_t config;
-	config.divider = TIMER_DIVIDER;
-	config.counter_dir = TIMER_COUNT_UP;
-	config.counter_en = TIMER_PAUSE;
-	config.alarm_en = TIMER_ALARM_EN;
-	config.intr_type = TIMER_INTR_LEVEL;
-	config.auto_reload = auto_reload;
-	timer_init(TIMER_GROUP_0, timer_idx, &config);
-	timer_set_counter_value(TIMER_GROUP_0, timer_idx, 0);
-	timer_set_alarm_value(TIMER_GROUP_0, timer_idx, timer_interval_sec * TIMER_SCALE);
-	timer_enable_intr(TIMER_GROUP_0, timer_idx);
-	timer_isr_register(TIMER_GROUP_0, timer_idx, timer_group0_isr, (void *) timer_idx, ESP_INTR_FLAG_IRAM, NULL);
-	timer_start(TIMER_GROUP_0, timer_idx);
+void initTimerGroup0(timer_idx_t timer_idx, bool auto_reload, double timer_interval_sec){
+    /* Select and initialize basic parameters of the timer */
+    timer_config_t config;
+    config.divider = TIMER_DIVIDER;
+    config.counter_dir = TIMER_COUNT_UP;
+    config.counter_en = TIMER_PAUSE;
+    config.alarm_en = TIMER_ALARM_EN;
+    config.intr_type = TIMER_INTR_LEVEL;
+    config.auto_reload = auto_reload;
+    timer_init(TIMER_GROUP_0, timer_idx, &config);
+
+    /* Timer's counter will initially start from value below.
+       Also, if auto_reload is set, this value will be automatically reload on alarm */
+    timer_set_counter_value(TIMER_GROUP_0, timer_idx, 0x00000000ULL);
+
+    /* Configure the alarm value and the interrupt on alarm. */
+    timer_set_alarm_value(TIMER_GROUP_0, timer_idx, timer_interval_sec * TIMER_SCALE);
+    timer_enable_intr(TIMER_GROUP_0, timer_idx);
+    timer_isr_register(TIMER_GROUP_0, timer_idx, timer_group0_isr, (void *) timer_idx, ESP_INTR_FLAG_IRAM, NULL);
+
+    timer_start(TIMER_GROUP_0, timer_idx);
 }
 
-
+void deinitTimer(timer_group_t timer_group, timer_idx_t timer_idx){
+	timer_pause(timer_group, timer_idx);
+	timer_disable_intr(timer_group, timer_idx);
+}
