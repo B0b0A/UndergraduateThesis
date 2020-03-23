@@ -13,6 +13,7 @@
 #include "driver/periph_ctrl.h"
 #include "driver/timer.h"
 #include "timers.h"
+#include "gpio_intr.h"
 
 xQueueHandle timer_queue;
 
@@ -55,7 +56,7 @@ void initTimerGroup0(timer_idx_t timer_idx, bool auto_reload, double timer_inter
     /* Configure the alarm value and the interrupt on alarm. */
     timer_set_alarm_value(TIMER_GROUP_0, timer_idx, timer_interval_sec * TIMER_SCALE);
     timer_enable_intr(TIMER_GROUP_0, timer_idx);
-    timer_isr_register(TIMER_GROUP_0, timer_idx, timer_group0_isr, (void *) timer_idx, ESP_INTR_FLAG_IRAM, NULL);
+    timer_isr_register(TIMER_GROUP_0, timer_idx, timer_group0_isr, NULL, ESP_INTR_FLAG_IRAM, NULL);
 
     timer_start(TIMER_GROUP_0, timer_idx);
 }
