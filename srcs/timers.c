@@ -5,15 +5,7 @@
  *      Author: Bojan Aleksovski
  */
 
-#include <stdio.h>
-#include "esp_types.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
-#include "driver/periph_ctrl.h"
-#include "driver/timer.h"
 #include "timers.h"
-#include "gpio_intr.h"
 
 xQueueHandle timer_queue;
 
