@@ -13,13 +13,10 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include "esp_types.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
+#include "main.h"
 #include "driver/periph_ctrl.h"
 #include "driver/timer.h"
+#include "timers.h"
 
 #define TIMER_DIVIDER         16  //  Hardware timer clock divider
 #define TIMER_SCALE           (TIMER_BASE_CLK / TIMER_DIVIDER)  // convert counter value to seconds
