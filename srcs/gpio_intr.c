@@ -31,5 +31,3 @@ void init_bt_button(){
     gpio_isr_handler_add(GPIO_BT_BTN, bt_btn_isr_handler, NULL);
 
 }
-
-
