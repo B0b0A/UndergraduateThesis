@@ -5,29 +5,14 @@
  *      Author: Bojan Aleksovski
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/event_groups.h"
-#include "esp_system.h"
-#include "esp_wifi.h"
-#include "esp_event.h"
-#include "esp_log.h"
-#include "esp_bt.h"
-#include "esp_blufi_api.h"
-#include "esp_bt_defs.h"
-#include "esp_gap_ble_api.h"
-#include "esp_bt_main.h"
-#include "esp_bt_device.h"
-#include "bluetooth.h"
 #include "wifi.h"
-
-#define WIFI_LIST_NUM   10
 
 wifi_config_t sta_config;
 wifi_config_t ap_config;
+
+// Http client
+esp_http_client_handle_t client;
+static const char *TAG = "HTTP_CLIENT";
 
 /* FreeRTOS event group to signal when we are connected & ready to make a request */
 EventGroupHandle_t wifi_event_group;
@@ -130,3 +115,68 @@ void init_WiFi()
     ESP_ERROR_CHECK( esp_wifi_set_mode(WIFI_MODE_STA) );
     ESP_ERROR_CHECK( esp_wifi_start() );
 }
+
+esp_err_t _http_event_handler(esp_http_client_event_t *evt){
+    switch(evt->event_id) {
+        case HTTP_EVENT_ERROR:
+            ESP_LOGD(TAG, "HTTP_EVENT_ERROR");
+            break;
+        case HTTP_EVENT_ON_CONNECTED:
+            ESP_LOGD(TAG, "HTTP_EVENT_ON_CONNECTED");
+            break;
+        case HTTP_EVENT_HEADER_SENT:
+            ESP_LOGD(TAG, "HTTP_EVENT_HEADER_SENT");
+            break;
+        case HTTP_EVENT_ON_HEADER:
+            ESP_LOGD(TAG, "HTTP_EVENT_ON_HEADER, key=%s, value=%s", evt->header_key, evt->header_value);
+            break;
+        case HTTP_EVENT_ON_DATA:
+            ESP_LOGD(TAG, "HTTP_EVENT_ON_DATA, len=%d", evt->data_len);
+            if (!esp_http_client_is_chunked_response(evt->client)) {
+                // Write out data
+                 printf("%.*s", evt->data_len, (char*)evt->data);
+            }
+
+            break;
+        case HTTP_EVENT_ON_FINISH:
+            ESP_LOGD(TAG, "HTTP_EVENT_ON_FINISH");
+            break;
+        case HTTP_EVENT_DISCONNECTED:
+            ESP_LOGI(TAG, "HTTP_EVENT_DISCONNECTED");
+            int mbedtls_err = 0;
+            esp_err_t err = esp_tls_get_and_clear_last_error(evt->data, &mbedtls_err, NULL);
+            if (err != 0) {
+                ESP_LOGI(TAG, "Last esp error code: 0x%x", err);
+                ESP_LOGI(TAG, "Last mbedtls failure: 0x%x", mbedtls_err);
+            }
+            break;
+    }
+    return ESP_OK;
+}
+
+void init_http_client(){
+	    esp_http_client_config_t config = {
+	        .url = "http://website12341234.000webhostapp.com/index.php",
+	        .event_handler = _http_event_handler,
+	    };
+	    client = esp_http_client_init(&config);
+}
+
+void post_data(char *data){
+		esp_err_t err;
+	    // POST
+	    esp_http_client_set_url(client,data);
+	    esp_http_client_set_method(client, HTTP_METHOD_GET);
+	    free(data);
+	    err = esp_http_client_perform(client);
+	    if (err == ESP_OK) {
+	        ESP_LOGI(TAG, "HTTP POST Status = %d, content_length = %d",
+	                esp_http_client_get_status_code(client),
+	                esp_http_client_get_content_length(client));
+	        		esp_http_client_cleanup(client);
+	    } else {
+	        ESP_LOGE(TAG, "HTTP POST request failed: %s", esp_err_to_name(err));
+	    }
+}
+
+
