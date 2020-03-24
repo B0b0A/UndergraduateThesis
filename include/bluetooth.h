@@ -12,16 +12,7 @@
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/event_groups.h"
-#include "esp_system.h"
-#include "esp_wifi.h"
-#include "esp_event.h"
-#include "esp_log.h"
+#include "main.h"
 #include "esp_bt.h"
 #include "esp_blufi_api.h"
 #include "esp_bt_defs.h"
@@ -29,10 +20,15 @@ extern "C" {
 #include "esp_bt_main.h"
 #include "esp_bt_device.h"
 
+#include "mbedtls/aes.h"
+#include "mbedtls/dhm.h"
+#include "mbedtls/md5.h"
+#include "esp32/rom/crc.h"
+
 #define BLUETOOTH_TAG "BLUETOOTH"
 #define BLUFI_INFO(fmt, ...)   ESP_LOGI(BLUETOOTH_TAG, fmt, ##__VA_ARGS__)
 #define BLUFI_ERROR(fmt, ...)  ESP_LOGE(BLUETOOTH_TAG, fmt, ##__VA_ARGS__)
-#define BLUFI_DEVICE_NAME            "ESPWStation"
+#define BLUFI_DEVICE_NAME            "BLUFI_DEVICE"
 
 void init_blufi();
 void deinit_blufi();
