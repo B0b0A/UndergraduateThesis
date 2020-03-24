@@ -5,13 +5,6 @@
  *      Author: Bojan Aleksovski
  */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/queue.h"
-#include "driver/gpio.h"
 #include "gpio_intr.h"
 
 xQueueHandle gpio_evt_queue;
