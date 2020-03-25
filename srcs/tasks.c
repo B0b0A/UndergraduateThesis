@@ -5,15 +5,7 @@
  *      Author: Bojan Aleksovski
  */
 
-#include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "bme280.h"
-#include "bluetooth.h"
-#include "wifi.h"
-#include "timers.h"
-#include "gpio_intr.h"
 #include "tasks.h"
-#include "misc.h"
 
 void main_task(void *arg){
 	while(1){
