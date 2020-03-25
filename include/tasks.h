@@ -13,13 +13,7 @@ extern "C" {
 #endif
 
 #include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "bme280.h"
-#include "bluetooth.h"
-#include "wifi.h"
-#include "timers.h"
-#include "gpio_intr.h"
-#include "tasks.h"
+#include "main.h"
 
 void main_task(void *arg);
 void timer_turn_off_bt_task(void *arg);
