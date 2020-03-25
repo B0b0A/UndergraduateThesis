@@ -9,7 +9,6 @@
 
 /*
    The SEC_TYPE_xxx is for self-defined packet data type in the procedure of "BLUFI negotiate key"
-   If user use other negotiation procedure to exchange(or generate) key, should redefine the type by yourself.
  */
 #define SEC_TYPE_DH_PARAM_LEN   0x00
 #define SEC_TYPE_DH_PARAM_DATA  0x01
