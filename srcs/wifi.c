@@ -178,5 +178,3 @@ void post_data(char *data){
 	        ESP_LOGE(TAG, "HTTP POST request failed: %s", esp_err_to_name(err));
 	    }
 }
-
-
