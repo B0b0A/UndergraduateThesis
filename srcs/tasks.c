@@ -5,13 +5,22 @@
  *      Author: Bojan Aleksovski
  */
 
+#include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "bme280.h"
+#include "bluetooth.h"
+#include "wifi.h"
+#include "timers.h"
+#include "gpio_intr.h"
 #include "tasks.h"
+#include "misc.h"
 
 void main_task(void *arg){
 	while(1){
 	my_measurement = bme280_make_measurement(&my_bme280);
     bme280_print_measurement(&my_measurement);
-    delay_sec(500);
+    update_header(float_to_string(my_measurement.temperature), float_to_string(my_measurement.humidity));
+    delay_sec(10);
 	}
 }
 
