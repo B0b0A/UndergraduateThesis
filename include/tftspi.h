@@ -3,7 +3,7 @@
  *
  *  Created on: Mar 27, 2020
  *      Author: Bojan Aleksovski
- *      Used module from loboris.github
+ *      Based on module from loboris.github
  */
 
 #ifndef MAIN_INCLUDE_TFTSPI_H_
