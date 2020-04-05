@@ -21,7 +21,6 @@ extern bme280_measurement_t my_measurement;
 char *float_to_string(float temp);
 char *concat(const char *s1, const char *s2);
 char *prepare_data();
-void init_NVS();
 void delay_sec(int time);
 
 
