@@ -15,6 +15,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -31,6 +32,9 @@ extern "C" {
 #include "timers.h"
 #include "tasks.h"
 #include "misc.h"
+#include "tftspi.h"
+#include "tft.h"
+#include "memory.h"
 
 
 #ifdef __cplusplus
