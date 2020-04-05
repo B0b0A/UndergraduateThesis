@@ -8,8 +8,8 @@
 #include "misc.h"
 
 bme280_config_t my_bme280 = {
-        .sda_pin = GPIO_NUM_19,
-        .scl_pin = GPIO_NUM_18,
+        .sda_pin = GPIO_NUM_26,
+        .scl_pin = GPIO_NUM_27,
         .i2c_interface = I2C_NUM_1
 };
 
@@ -58,20 +58,6 @@ char *prepare_data(){
 	return data;
 }
 
-
-void init_NVS(){
-    esp_err_t ret;
-
-    // Initialize NVS
-    ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK( ret );
-    // Clean at beginning so we can re-init later
-    ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT));
-}
 
 void delay_sec(int time)
 {
