@@ -15,7 +15,7 @@ extern "C" {
 #include "main.h"
 #include "driver/gpio.h"
 
-#define GPIO_BT_BTN     5
+#define GPIO_BT_BTN     35
 #define GPIO_BT_BTN_MASK (1ULL<<GPIO_BT_BTN)
 #define ESP_INTR_FLAG_DEFAULT 0
 
