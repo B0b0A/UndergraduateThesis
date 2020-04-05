@@ -14,10 +14,10 @@ void app_main()
 
 	init_NVS();
 	init_SPIFFS();
+	init_LCD();
 	init_WiFi();
 	bme280_init(&my_bme280);
 	init_bt_button();
-	init_LCD();
 
 	xTaskCreate(main_task, "main_task", 2048, NULL, 5, NULL);
 	xTaskCreate(timer_turn_off_bt_task, "timer_bt_task", 2048, NULL, 5, NULL);
